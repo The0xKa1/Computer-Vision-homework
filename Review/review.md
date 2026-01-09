@@ -175,13 +175,12 @@ Harris 角点检测正是要找到这些在所有方向上强度变化都很大�
     5.  代入上式，得到：
         $$E(u, v) \approx \sum_{(x,y) \in w} [uI_x + vI_y]^2 = \sum_{(x,y) \in w} (u^2I_x^2 + 2uvI_xI_y + v^2I_y^2)$$
     6.  将求和项与 $(u, v)$ 分离，并写成矩阵形式，就得到了最终的公式：
-        $$E(u, v) \approx \begin{bmatrix} u & v \end{bmatrix} \left( \sum_{(x,y) \in w} \begin{bmatrix} I_x^2 & I_xI_y \\ I_xI_y & I_y^2 \end{bmatrix} \right) \begin{bmatrix} u \\ v \end{bmatrix}$$
+        $$E(u, v) \approx \begin{bmatrix} u & v \end{bmatrix} \left( \sum_{(x,y) \in w} \begin{bmatrix} I_x^2 & I_xI_y \\\ I_xI_y & I_y^2 \end{bmatrix} \right) \begin{bmatrix} u \\\ v \end{bmatrix}$$
     7.  其中，中间的那个 2x2 矩阵就是 **M 矩阵**：
-        $$M = \begin{bmatrix} \sum I_x^2 & \sum I_xI_y \\ \sum I_xI_y & \sum I_y^2 \end{bmatrix}$$
+        $$M = \begin{bmatrix} \sum I_x^2 & \sum I_xI_y \\\ \sum I_xI_y & \sum I_y^2 \end{bmatrix}$$
 
 #### **3. 理解M矩阵的 $\lambda_{max}$、$\lambda_{min}$ 两个特征值的含义，其与Harris角点关系是什么？**
 矩阵 $M$ 描述了窗口内梯度的分布情况。它的两个特征值 $\lambda_{max}$ 和 $\lambda_{min}$ 直观地反映了在两个相互垂直的方向上（特征向量方向），窗口强度变化的大小。
-
 * **关系与含义**:
     * **平坦区域**: 梯度很小，所以两个特征值 $\lambda_{max}$ 和 $\lambda_{min}$ 都很小。
     * **边缘区域**: 只有一个方向梯度变化大，所以 $\lambda_{max}$ 很大，而 $\lambda_{min}$ 很小。
@@ -497,8 +496,8 @@ Eigenface 是将 PCA 应用于人脸识别的经典方法。
 6.  将这些定义代入，得到光流约束方程的标量形式：
     $I_x u + I_y v + I_t = 0$
 
-7.  写成向量形式，令图像空间梯度为 $\nabla I = \begin{bmatrix} I_x \\ I_y \end{bmatrix}$，光流向量为 $\begin{bmatrix} u \\ v \end{bmatrix}$，则方程为：
-    $$\nabla I^T \begin{bmatrix} u \\ v \end{bmatrix} + I_t = 0 \quad \text{或} \quad \nabla I \cdot \begin{bmatrix} u \\ v \end{bmatrix} + I_t = 0$$
+7.  写成向量形式，令图像空间梯度为 $\nabla I = \begin{bmatrix} I_x \\\ I_y \end{bmatrix}$，光流向量为 $\begin{bmatrix} u \\\ v \end{bmatrix}$，则方程为：
+    $$\nabla I^T \begin{bmatrix} u \\\ v \end{bmatrix} + I_t = 0 \quad \text{或} \quad \nabla I \cdot \begin{bmatrix} u \\\ v \end{bmatrix} + I_t = 0$$
     这与幻灯片上的公式形式一致。
 
 ### **4. 哪些位置的光流比较可靠？为什么？**
@@ -548,14 +547,14 @@ Lucas-Kanade 算法的巧妙之处在于它提出了一个关键假设来解决�
     我们可以将上述方程组写成矩阵形式 $A\vec{v} = b$：
 $$
 \begin{bmatrix}
-I_x(p_1) & I_y(p_1) \\
-I_x(p_2) & I_y(p_2) \\
-\vdots & \vdots \\
+I_x(p_1) & I_y(p_1) \\\
+I_x(p_2) & I_y(p_2) \\\
+\vdots & \vdots \\\
 I_x(p_n) & I_y(p_n)
 \end{bmatrix}
-\begin{bmatrix} u \\ v \end{bmatrix}
+\begin{bmatrix} u \\\ v \end{bmatrix}
 =
-\begin{bmatrix} -I_t(p_1) \\ -I_t(p_2) \\ \vdots \\ -I_t(p_n) \end{bmatrix}
+\begin{bmatrix} -I_t(p_1) \\\ -I_t(p_2) \\ \vdots \\\ -I_t(p_n) \end{bmatrix}
 $$
 
 其中，$A$ 是该邻域内所有像素的空间梯度矩阵，$\vec{v}$ 是我们要求解的光流矢量，$b$是所有像素的时间梯度向量。
@@ -569,7 +568,7 @@ $$
 4.  **可解性条件**：
 
     该方程有解的前提是矩阵 $A^T A$ 是可逆的。$A^T A$ 是一个 2x2 矩阵：
-    $$A^T A = \begin{bmatrix} \sum I_x^2 & \sum I_x I_y \\ \sum I_x I_y & \sum I_y^2 \end{bmatrix}$$
+    $$A^T A = \begin{bmatrix} \sum I_x^2 & \sum I_x I_y \\\ \sum I_x I_y & \sum I_y^2 \end{bmatrix}$$
     这个矩阵可逆意味着该像素窗口内必须有**足够的纹理**，即梯度在两个方向上都比较丰富。这就是为什么 LK 算法非常适合在**角点 (Corners)** 等特征上进行跟踪，而在平坦区域或笔直的边缘上会失效的原因。
 
 ## 物体识别
@@ -803,10 +802,10 @@ Softmax函数在这里主要有两个作用：
         $$\frac{y}{f} = \frac{Y}{Z} \implies y = f \frac{Y}{Z}$$
     * **齐次坐标下的矩阵形式**：为了用线性代数统一表示，我们引入齐次坐标。三维点 `P` 的齐次坐标为 `[X, Y, Z, 1]^T`。投影过程可以表示为：
         $$
-        \begin{bmatrix} x' \\ y' \\ w' \end{bmatrix} =
-        \begin{bmatrix} f & 0 & 0 & 0 \\ 0 & f & 0 & 0 \\ 0 & 0 & 1 & 0 \end{bmatrix}
-        \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix}
-        = \begin{bmatrix} fX \\ fY \\ Z \end{bmatrix}
+        \begin{bmatrix} x' \\\ y' \\\ w' \end{bmatrix} =
+        \begin{bmatrix} f & 0 & 0 & 0 \\\ 0 & f & 0 & 0 \\\ 0 & 0 & 1 & 0 \end{bmatrix}
+        \begin{bmatrix} X \\\ Y \\\ Z \\\ 1 \end{bmatrix}
+        = \begin{bmatrix} fX \\\ fY \\\ Z \end{bmatrix}
         $$
         其中 `(x', y', w')` 是像点在齐次坐标下的表示。要转换回笛卡尔坐标，只需 `x = x'/w'` 和 `y = y'/w'`，即 `x = fX/Z`，`y = fY/Z`，与之前推导一致。
 
@@ -817,7 +816,7 @@ Softmax函数在这里主要有两个作用：
         * `s`：坐标轴倾斜参数（skew），现代相机通常为0。
     * **内参矩阵 (Intrinsic Matrix `K`)**：
         $$
-        K = \begin{bmatrix} f_x & s & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix}
+        K = \begin{bmatrix} f_x & s & c_x \\\ 0 & f_y & c_y \\\ 0 & 0 & 1 \end{bmatrix}
         $$
 
 * **投影变化: 保角？保距？保平行？保共线？**
@@ -839,17 +838,17 @@ Softmax函数在这里主要有两个作用：
 
 * **给一个刚体变换 Rx+t, 会推导出齐次坐标的矩阵乘形式**
     * **刚体变换**：一个三维点 $X$ 经过旋转 $R$ (3×3矩阵) 和平移 $t$ (3×1向量) 得到新点 $X' = RX + t$。
-    * **推导**：将 $X$ 和 $X'$ 写成齐次坐标 $X_h = \begin{bmatrix} X \\ 1 \end{bmatrix}$ 和 $X'_h = \begin{bmatrix} X' \\ 1 \end{bmatrix}$。我们想找到一个4×4的变换矩阵 $T$，使得 $X'_h = T X_h$。
+    * **推导**：将 $X$ 和 $X'$ 写成齐次坐标 $X_h = \begin{bmatrix} X \\\ 1 \end{bmatrix}$ 和 $X'_h = \begin{bmatrix} X' \\\ 1 \end{bmatrix}$。我们想找到一个4×4的变换矩阵 $T$，使得 $X'_h = T X_h$。
 $$
-X'_h = \begin{bmatrix} X' \\ 1 \end{bmatrix} = \begin{bmatrix} RX + t \\ 1 \end{bmatrix}
+X'_h = \begin{bmatrix} X' \\\ 1 \end{bmatrix} = \begin{bmatrix} RX + t \\ 1 \end{bmatrix}
 $$
 我们可以构建 $T$ 如下：
 $$
-T = \begin{bmatrix} R & t \\ \mathbf{0} & 1 \end{bmatrix}
+T = \begin{bmatrix} R & t \\\ \mathbf{0} & 1 \end{bmatrix}
 $$
 其中 $R$ 是3×3旋转矩阵，$t$ 是3×1平移向量，$\mathbf{0}$ 是1×3的零向量。验证一下：
 $$
-T X_h = \begin{bmatrix} R & t \\ \mathbf{0} & 1 \end{bmatrix} \begin{bmatrix} X \\ 1 \end{bmatrix} = \begin{bmatrix} RX + t \cdot 1 \\ \mathbf{0}X + 1 \cdot 1 \end{bmatrix} = \begin{bmatrix} RX + t \\ 1 \end{bmatrix} = X'_h
+T X_h = \begin{bmatrix} R & t \\\ \mathbf{0} & 1 \end{bmatrix} \begin{bmatrix} X \\\ 1 \end{bmatrix} = \begin{bmatrix} RX + t \cdot 1 \\\ \mathbf{0}X + 1 \cdot 1 \end{bmatrix} = \begin{bmatrix} RX + t \\\ 1 \end{bmatrix} = X'_h
 $$
 推导完成。这个 $T$ 就是外参矩阵。
 
@@ -878,7 +877,7 @@ $$
         2.  **平移 (Translation)**：3个参数，描述相机光心在世界坐标系中的**位置**。可以用一个3×1的平移向量 $t$ 来表示。
     * **外参矩阵（齐次坐标）**：外参的作用是将一个在世界坐标系下的点 $P_w$ 转换到相机坐标系下的点 $P_c$，即 $P_c = R \cdot P_w + t$。为了用一次矩阵乘法完成这个变换，我们使用齐次坐标。外参矩阵 $T$ 是一个4×4的矩阵：
         $$
-        T = \begin{bmatrix} R & t \\ \mathbf{0} & 1 \end{bmatrix}
+        T = \begin{bmatrix} R & t \\\ \mathbf{0} & 1 \end{bmatrix}
         $$
         其中 $R$ 是3×3旋转矩阵，$t$ 是3×1平移向量，$\mathbf{0}$ 是一个1×3的零向量。这个矩阵可以将世界坐标系下的齐次坐标点 $[P_w; 1]$ 转换为相机坐标系下的齐次坐标点 $[P_c; 1]$。
 
